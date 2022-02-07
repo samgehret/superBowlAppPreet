@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <style>
+            body {
+                font-family: 'Inter', sans-serif;
+                /* background: #228B22; */
+                /* color: white; */
+            }
+
+            table {
+                border-spacing: 10px;
+            }
+
+
+            .flex-container {
+                display: flex;
+                justify-content: center;
+                margin: 10px;
+                flex-wrap: wrap;
+                /* flex-direction: column-reverse; */
+            }
+
+            table, th, td {
+              border: 1px solid black;
+              border-collapse: collapse;
+              margin: 10px;
+            }
+            th, td {
+              padding: 10px;
+            }
+            th {
+              text-align: left;
+              font-weight: bold;
+              background: grey;
+              color: white;
+            }
+            .header {
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <div class='header'>
+            <h1>Gehret Superbowl 55 Pool</h1>
+            <p>
+                Follow along in real time as the game goes on. Leaderboard will update automatically every 5 minutes.
+            </p>
+        </div>
+        <div class="flex-container">
+            <div class = 'leaderdiv'>
+                <h2 class = 'header'>Leaderboard</h2>
+                <div class='leaderboard'></div>
+            </div>
+            <div class = 'answer-key'>
+                <h2 class = 'header'>Answer Key</h2>
+                <div class='question-answer'></div>
+            </div>
+            
+            
+        </div>
+        
+        <!-- <script src="app.js" async defer></script> -->
+    </body>
+
+    <script>
+    function updateTable() {
+        const scoreDiv = document.querySelector("div.question-answer")
+        let tableHeaders = ["Question", "Answer"]
+
+        while (scoreDiv.firstChild) {
+            scoreDiv.removeChild(scoreDiv.firstChild)
+        }
+
+        // Create table
+        scoreboardTable = document.createElement('table')
+        scoreboardTable.className = 'scoreboardTable'
+
+        //Append Table to Div
+        scoreDiv.append(scoreboardTable)
+
+        //Create Table Header
+        scoreboardTableHead = document.createElement('thead')
+        scoreboardTableHead.className = 'scoreboardTableHead'
+
+        //Append Table head to table
+        scoreboardTable.append(scoreboardTableHead)
+
+        scoreboardTableHeaderRow = document.createElement('tr')
+        scoreboardTableHeaderRow.className = 'scoreboardTableHeaderRow'
+
+        scoreboardTableHead.append(scoreboardTableHeaderRow)
+
+        tableHeaders.forEach(header => {
+            let scoreHeader = document.createElement('th')
+            scoreHeader.innerText = header
+            // console.log(header)
+            scoreboardTableHeaderRow.append(scoreHeader)
+    
+        })
+
+        scoreboardTableBody = document.createElement('tbody')
+        scoreboardTableBody.className = 'scoreboardTable-Body'
+        scoreboardTable.append(scoreboardTableBody)
+        scoreDiv.append(scoreboardTable)
+        const leaderDiv = document.querySelector("div.leaderboard")
+        let leaderHeaders = ["Position", "Player", "Score"]
+
+        while (leaderDiv.firstChild) {
+            leaderDiv.removeChild(leaderDiv.firstChild)
+        }
+
+        // Create table
+        leaderboardTable = document.createElement('table')
+        leaderboardTable.className = 'leaderboardTable'
+
+        //Append Table to Div
+        leaderDiv.append(leaderboardTable)
+
+        //Create Table Header
+        leaderboardTableHead = document.createElement('thead')
+        leaderboardTableHead.className = 'leaderboardTableHead'
+
+        //Append Table head to table
+        leaderboardTable.append(leaderboardTableHead)
+
+        leaderboardTableHeaderRow = document.createElement('tr')
+        leaderboardTableHeaderRow.className = 'leaderboardTableHeaderRow'
+
+        leaderboardTableHead.append(leaderboardTableHeaderRow)
+
+        leaderHeaders.forEach(header => {
+            let leaderHeader = document.createElement('th')
+            leaderHeader.innerText = header
+            // console.log(header)
+            leaderboardTableHeaderRow.append(leaderHeader)
+    
+        })
+
+        leaderboardTableBody = document.createElement('tbody')
+        leaderboardTableBody.className = 'leaderboardTable-Body'
+        leaderboardTable.append(leaderboardTableBody)
+
+        leaderDiv.append(leaderboardTable)
+
+        
+
+
+            axios.get('https://sheets.googleapis.com/v4/spreadsheets/1kEgQ-W-080sDbmVrsZEAxbsZf8E1vEzY7y9Odzq9T4s/values/Sheet1!D1:AN150?key=AIzaSyAL4ItIvnV3cHkeKt4r0l70KnsFB4qTygM&majorDimension=COLUMNS')
+            .then(function(response) {
+                let data = response.data.values
+                // console.log(response.data)
+                var k;
+                for (k = 1; k < data.length; k++) {
+                    let scoreboardTableBodyRow = document.createElement('tr') // Create the current table row
+                    scoreboardTableBodyRow.className = 'scoreboardTableBodyRow'
+                    let question = document.createElement('td')
+                    question.innerText = data[k][0]
+
+                    let answer = document.createElement('td')
+                    answer.innerText = data[k][1]
+                    scoreboardTableBodyRow.append(question, answer)
+                    scoreboardTable.append(scoreboardTableBodyRow)
+                }
+                
+            })
+
+            axios.get('https://sheets.googleapis.com/v4/spreadsheets/1kEgQ-W-080sDbmVrsZEAxbsZf8E1vEzY7y9Odzq9T4s/values/Sheet1!C1:AN150?key=AIzaSyAL4ItIvnV3cHkeKt4r0l70KnsFB4qTygM')
+            .then(function (response) {
+                let leaderData = response.data.values
+                console.log('leader data', leaderData)
+
+                leaderData.shift()
+                leaderData.shift()
+
+                var sortedArray = leaderData.sort(function(a, b) {
+                    return b[0] - a[0];
+                });
+                console.log('sorted', sortedArray)
+
+                var i;
+                for (i = 0; i < leaderData.length; i++) {
+                    let leaderboardTableBodyRow = document.createElement('tr') // Create the current table row
+                        leaderboardTableBodyRow.className = 'leaderboardTableBodyRow'
+
+                        let position = document.createElement('td')
+                        position.innerText= i + 1
+
+                        let player = document.createElement('td')
+                        player.innerText = leaderData[i][1]
+
+                        let score = document.createElement('td')
+
+                        score.innerText = leaderData[i][0]
+                        leaderboardTableBodyRow.append(position, player, score)
+                        leaderboardTable.append(leaderboardTableBodyRow)
+                }
+            })
+
+        }
+
+
+
+        updateTable()
+        setInterval(updateTable, 300000)
+
+    </script>
+</html>
